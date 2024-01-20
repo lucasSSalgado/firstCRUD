@@ -33,3 +33,29 @@ func (s *StockService) SaveStock(stock model.Stock) (uint64, error) {
 
 	return stock.ID, nil
 }
+
+func (s *StockService) UpdateStock(stock model.Stock, id uint64) (model.Stock, error) {
+	exist := new(model.Stock)
+	result := s.db.First(&exist, id)
+	if result.Error != nil {
+		return model.Stock{}, result.Error
+	}
+
+	exist.Ticker = stock.Ticker
+	exist.Price = stock.Price
+	resp := s.db.Save(&exist)
+	if resp.Error != nil {
+		return model.Stock{}, resp.Error
+	}
+
+	return *exist, nil
+}
+
+func (s *StockService) DeleteById(id uint64) error {
+	result := s.db.Delete(&model.Stock{}, id)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
