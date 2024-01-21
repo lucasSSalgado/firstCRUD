@@ -73,7 +73,10 @@ func (c *StockController) saveStock(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, id)
+	ctx.JSON(
+		http.StatusCreated,
+		gin.H{"id": id},
+	)
 }
 
 func (c *StockController) updateStock(ctx *gin.Context) {
@@ -93,7 +96,7 @@ func (c *StockController) updateStock(ctx *gin.Context) {
 			http.StatusBadRequest,
 			gin.H{"error": err},
 		)
-		return	
+		return
 	}
 
 	newOne, err := c.service.UpdateStock(*stock, id)
